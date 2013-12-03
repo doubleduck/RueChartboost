@@ -31,7 +31,6 @@ public class ChartboostConnect extends Extension
 				 Log.e("ChartboostConnect","APP ID AND/OR APP SIGNATURE HAVE NOT BEEN SET, set your app id in your project.xml file like this: <setenv name='ChartboostID' value='your id' /> <setenv name='ChartboostSignature' name='your app signature' /> ");
 				return;
 			}
-            Log.e("ChartboostConnect", "CREATING CHARTBOOST SERVICE");
             ChartboostConnect.cb = Chartboost.sharedChartboost();
             ChartboostConnect.cb.onCreate(Extension.mainActivity, ChartboostConnect.appID, ChartboostConnect.appSignature, null);
         }
@@ -39,37 +38,44 @@ public class ChartboostConnect extends Extension
 
         @Override public void onStart()
         {
-            Log.e("ChartboostConnect", "STARTING CHARTBOOST");
+            super.onStart();
             ChartboostConnect.cb.onStart(Extension.mainActivity);
-        
-            // Notify the beginning of a user session. Must not be dependent on user actions or any prior network requests.
             ChartboostConnect.cb.startSession();
         }   
         
         @Override public void onStop() 
         {
-            Log.e("ChartboostConnect", "STOPPING CHARTBOOST");
-            ChartboostConnect.cb.onBackPressed();
+            super.onStop();
             ChartboostConnect.cb.onStop(Extension.mainActivity);
         }
         
         @Override public void onDestroy() 
         {
+            super.onDestroy();
             ChartboostConnect.cb.onDestroy(Extension.mainActivity);
         }
+
+        public static void cacheAd()
+        {
+            if (ChartboostConnect.cb != null)
+            {
+                ChartboostConnect.cb.cacheInterstitial(); 
+            }
+        }
+
+        public static boolean hasCachedAd() {
+           if (ChartboostConnect.cb != null)
+            {
+                return ChartboostConnect.cb.hasCachedInterstitial(); 
+            } 
+            return false;
+        } 
         
-        public static void ShowAd()
+        public static void showAd()
         {
             if(ChartboostConnect.cb != null)
             {
-                if(ChartboostConnect.cb.onBackPressed())
-                {
-                    ChartboostConnect.cb.showInterstitial(); 
-                }
-                else
-                {
-                    ChartboostConnect.cb.showInterstitial(); 
-                }
+                ChartboostConnect.cb.showInterstitial(); 
             }
         }
         

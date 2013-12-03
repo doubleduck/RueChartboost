@@ -15,25 +15,52 @@ import openfl.utils.JNI;
 @:allow(extension.haxeChartboost) class HaxeChartboost 
 {
 	#if android
-	static var ShowAdFunc;
+	static var showAdFunc;
+	static var cacheAdFunc;
+	static var hasCachedAdFunc;
 	#end
 	
-	public static function OpenIntersetial():Void
+	public static function showInterstitial():Void
 	{
 		#if android
 		trace("ATTEMPTING TO CREATE FUNCTION FOR CHARTBOOST");
-		if (ShowAdFunc == null)
+		if (showAdFunc == null)
 		{
-			ShowAdFunc = JNI.createStaticMethod("org/haxe/extension/cb/ChartboostConnect", "ShowAd", "()V");
+			showAdFunc = JNI.createStaticMethod("org/haxe/extension/cb/ChartboostConnect", "showAd", "()V");
 		}
-		
-		Lib.postUICallback(function(){
-		ShowAdFunc(); } );
+		showAdFunc();
 		#end
 		
 		#if ios
-		trace("ATTEMPTING TO OPEN AD FOR CHARTBOOST");
-		cb_show_interstitial();
+			cb_show_interstitial();
+		#end
+	}
+
+	public static function cacheInterstitial():Void {
+		#if android
+			if (cacheAdFunc == null)
+			{	
+				cacheAdFunc = JNI.createStaticMethod("org/haxe/extension/cb/ChartboostConnect", "cacheAd", "()V");
+			}			
+			cacheAdFunc();
+		#end
+
+		#if ios
+			cb_cache_interstitial();
+		#end
+	}
+
+	public static function hasCachedInterstitial():Bool {
+		#if android
+			if (hasCachedAdFunc == null)
+			{	
+				hasCachedAdFunc = JNI.createStaticMethod("org/haxe/extension/cb/ChartboostConnect", "hasCachedAd", "()Z");
+			}			
+			return hasCachedAdFunc();
+		#end
+
+		#if ios
+			return cb_has_cached_interstitial();
 		#end
 	}
 	
@@ -41,8 +68,7 @@ import openfl.utils.JNI;
 	public static function init(appID:String, appSignature:String)
 	{
 		#if ios
-		//"::ENV_ChartboostID::"
-		cb_init(appID, appSignature);
+			cb_init(appID, appSignature);
 		#end
 		
 		#if android
@@ -54,6 +80,8 @@ import openfl.utils.JNI;
 	#if ios
 	static var cb_init               = Lib.load("ruechartboost","cb_init",2);
 	static var cb_show_interstitial  = Lib.load("ruechartboost","cb_show_interstitial", 0);
+	static var cb_cache_interstitial  = Lib.load("ruechartboost","cb_cache_interstitial", 0);
+	static var cb_has_cached_interstitial = Lib.load("ruechartboost", "cb_has_cached_interstitial", 0);
 	#end
 	
 	

@@ -28,14 +28,21 @@ value cb_show_interstitial()
     cbShowInterstitial();
     return alloc_null();
 }
+
 DEFINE_PRIM(cb_show_interstitial, 0);
 
-value cb_show_more_apps(){
-        
-        cbShowMoreApps();
-        return alloc_null();
+value cb_cache_interstitial()
+{
+    cbCacheInterstitial();
+    return alloc_null();
 }
-DEFINE_PRIM(cb_show_more_apps, 0);
+DEFINE_PRIM(cb_cache_interstitial, 0);
+
+value cb_has_cached_interstitial()
+{
+    return alloc_bool(cbHasCachedInterstitial());
+}
+DEFINE_PRIM(cb_has_cached_interstitial, 0);
 
 #endif
 
